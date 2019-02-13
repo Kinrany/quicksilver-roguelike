@@ -210,6 +210,21 @@ impl State for Game {
       Ok(())
     })?;
 
+    let (tileset, entities) = (&mut self.tileset, &self.entities);
+    tileset.execute(|tileset| {
+      for entity in entities.iter() {
+        if let Some(image) = tileset.get(&entity.glyph) {
+          let pos_px = entity.pos.times(tile_size_px);
+          let offset_px = Vector::new(50, 120);
+          window.draw(
+            &Rectangle::new(offset_px + pos_px, image.area().size()),
+            Blended(&image, entity.color),
+          );
+        }
+      }
+      Ok(())
+    })?;
+
     Ok(())
   }
 }
