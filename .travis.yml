@@ -2,6 +2,7 @@ language: rust
 cache: cargo
 script:
   - cargo build --release
+  - cargo install cargo-web --force
   - cargo web deploy --release
 deploy:
   provider: pages
