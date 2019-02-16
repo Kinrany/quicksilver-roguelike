@@ -1,8 +1,8 @@
 language: rust
 cache: cargo
-install:
-  - rustup target add wasm32-unknown-unknown
 script:
+  - cargo build --release
+  - cargo install cargo-web --force
   - cargo web deploy --release
 deploy:
   provider: pages
