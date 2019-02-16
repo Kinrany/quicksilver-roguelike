@@ -161,7 +161,30 @@ impl State for Game {
   }
 
   /// Process keyboard and mouse, update the game state
-  fn update(&mut self, _window: &mut Window) -> Result<()> {
+  fn update(&mut self, window: &mut Window) -> Result<()> {
+    use quicksilver::input::{ButtonState::*, Key};
+
+    let player = &mut self.entities[self.player_entity_id];
+
+    // press arrow keys to move
+    if window.keyboard()[Key::Left] == Pressed {
+      player.pos.x -= 1.0;
+    }
+    if window.keyboard()[Key::Right] == Pressed {
+      player.pos.x += 1.0;
+    }
+    if window.keyboard()[Key::Up] == Pressed {
+      player.pos.y -= 1.0;
+    }
+    if window.keyboard()[Key::Down] == Pressed {
+      player.pos.y += 1.0;
+    }
+
+    // press Esc to exit the game
+    if window.keyboard()[Key::Escape].is_down() {
+      window.close();
+    }
+
     Ok(())
   }
 
