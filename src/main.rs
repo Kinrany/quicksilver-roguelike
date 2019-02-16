@@ -84,7 +84,7 @@ struct Game {
   map_size: Vector,
   map: Vec<Tile>,
   entities: Vec<Entity>,
-  player_id: usize,
+  player_entity_id: usize,
   tileset: Asset<HashMap<char, Image>>,
   tile_size_px: Vector,
 }
@@ -94,10 +94,12 @@ impl State for Game {
   fn new() -> Result<Self> {
     let font_mononoki = "mononoki-Regular.ttf";
 
+    // create a prerendered image with title text
     let title = Asset::new(Font::load(font_mononoki).and_then(|font| {
       font.render("Quicksilver Roguelike", &FontStyle::new(72.0, Color::BLACK))
     }));
 
+    // create a prerendered image with text about the Mononoki font
     let mononoki_font_info = Asset::new(Font::load(font_mononoki).and_then(|font| {
       font.render(
         "Mononoki font by Matthias Tellen, terms: SIL Open Font License 1.1",
@@ -105,6 +107,7 @@ impl State for Game {
       )
     }));
 
+    // create a prerendered image with text about the Square font
     let square_font_info = Asset::new(Font::load(font_mononoki).and_then(move |font| {
       font.render(
         "Square font by Wouter Van Oortmerssen, terms: CC BY 3.0",
@@ -112,11 +115,13 @@ impl State for Game {
       )
     }));
 
+    // map and entities
     let map_size = Vector::new(15, 15);
     let map = generate_map(map_size);
     let mut entities = generate_entities();
 
-    let player_id = entities.len();
+    // add entity "player"
+    let player_entity_id = entities.len();
     entities.push(Entity {
       pos: Vector::new(5, 3),
       glyph: '@',
@@ -125,6 +130,7 @@ impl State for Game {
       max_hp: 5,
     });
 
+    // create a prerendered tileset
     let font_square = "square.ttf";
     let game_glyphs = "#@g.%";
     let tile_size_px = Vector::new(24, 24);
@@ -148,7 +154,7 @@ impl State for Game {
       map_size,
       map,
       entities,
-      player_id,
+      player_entity_id,
       tileset,
       tile_size_px,
     })
@@ -163,6 +169,7 @@ impl State for Game {
   fn draw(&mut self, window: &mut Window) -> Result<()> {
     window.clear(Color::WHITE)?;
 
+    // draw the image with title text
     self.title.execute(|image| {
       window.draw(
         &image
@@ -173,6 +180,7 @@ impl State for Game {
       Ok(())
     })?;
 
+    // draw the image with text about the Mononoki font
     self.mononoki_font_info.execute(|image| {
       window.draw(
         &image
@@ -183,6 +191,7 @@ impl State for Game {
       Ok(())
     })?;
 
+    // draw the image with text about the Square font
     self.square_font_info.execute(|image| {
       window.draw(
         &image
@@ -193,8 +202,10 @@ impl State for Game {
       Ok(())
     })?;
 
+    // create an alias
     let tile_size_px = self.tile_size_px;
 
+    // draw the map
     let (tileset, map) = (&mut self.tileset, &self.map);
     tileset.execute(|tileset| {
       for tile in map.iter() {
@@ -210,6 +221,7 @@ impl State for Game {
       Ok(())
     })?;
 
+    // draw the entities
     let (tileset, entities) = (&mut self.tileset, &self.entities);
     tileset.execute(|tileset| {
       for entity in entities.iter() {
