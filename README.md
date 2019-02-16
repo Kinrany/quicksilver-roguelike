@@ -1,5 +1,7 @@
 # quicksilver-roguelike
 
+![build status](https://travis-ci.org/Kinrany/quicksilver-roguelike.svg?branch=master)
+
 ## Play
 
 https://kinrany.github.io/quicksilver-roguelike/
